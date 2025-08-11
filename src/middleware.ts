@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
-export function middleware(req: NextRequest) {
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+
+export async function middleware(req: NextRequest) {
   try {
     const token = req.cookies.get("token")?.value;
     if (!token) {
@@ -16,12 +18,12 @@ export function middleware(req: NextRequest) {
     }
 
     // Verify JWT
-    const decoded = jwt.verify(token, secret) as JwtPayload;
+    const { payload } = await jwtVerify(token, JWT_SECRET);
 
     // ✅ Attach decoded user data to request headers for downstream APIs
     const requestHeaders = new Headers(req.headers);
-    requestHeaders.set("x-user-id", decoded.userId);
-    requestHeaders.set("x-username", decoded.username);
+    requestHeaders.set("x-user-id", payload?.userId as string);
+    requestHeaders.set("x-username", payload?.username as string);
 
     return NextResponse.next({
       request: {

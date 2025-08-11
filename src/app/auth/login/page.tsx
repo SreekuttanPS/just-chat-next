@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 type ErrorState = {
@@ -21,6 +22,8 @@ export default function LoginPage() {
 
   const userNameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +55,7 @@ export default function LoginPage() {
     });
 
     if (res.ok) {
-      alert("Logged in! Cookie is set 🍪");
+      router.push("/dashboard");
     } else {
       const body = (await res.json()) as ErrorState;
       if (body?.username) {
