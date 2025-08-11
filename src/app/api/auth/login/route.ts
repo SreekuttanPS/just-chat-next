@@ -8,9 +8,16 @@ export async function POST(req: Request) {
   try {
     const { username, password } = await req.json();
 
-    if (!username || !password) {
+    if (!username) {
       return NextResponse.json(
-        { message: "Username and password are required" },
+        { username: "Username is required" },
+        { status: 400 }
+      );
+    }
+
+    if (!password) {
+      return NextResponse.json(
+        { password: "Password is required" },
         { status: 400 }
       );
     }
@@ -20,7 +27,7 @@ export async function POST(req: Request) {
     const user = await User.findOne({ username });
     if (!user) {
       return NextResponse.json(
-        { message: "Invalid username or password" },
+        { username: "User doesn't exist, Please check the username!" },
         { status: 401 }
       );
     }
@@ -28,7 +35,7 @@ export async function POST(req: Request) {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return NextResponse.json(
-        { message: "Invalid username or password" },
+        { password: "Invalid username or password!" },
         { status: 401 }
       );
     }
@@ -40,12 +47,23 @@ export async function POST(req: Request) {
       { expiresIn: "7d" }
     );
 
-    return NextResponse.json(
-      { message: "Login successful", token },
+    const res = NextResponse.json(
+      { message: "Logged in successfully" },
       { status: 200 }
     );
+    res.cookies.set({
+      name: "token",
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    return res;
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    return NextResponse.json({ password: "Server error" }, { status: 500 });
   }
 }
