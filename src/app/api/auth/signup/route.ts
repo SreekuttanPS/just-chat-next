@@ -26,18 +26,18 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // const newUser = await User.create({
-    //   username,
-    //   name,
-    //   password: hashedPassword,
-    // });
+    const newUser = await User.create({
+      username,
+      name,
+      password: hashedPassword,
+    });
 
-    // return NextResponse.json({
-    //   message: "User created successfully",
-    //   userId: newUser._id,
-    // });
+    return NextResponse.json({
+      message: "User created successfully",
+      userId: newUser._id,
+    });
 
-    return NextResponse.json({ message: "Fake response" });
+    // return NextResponse.json({ message: "Fake response" });
   } catch (error) {
     console.error("Signup error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
