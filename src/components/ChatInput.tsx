@@ -31,11 +31,11 @@ const ChatInput = () => {
         id="message"
         placeholder="Type a message..."
         className="flex-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 dark:border-gray-700 dark:focus:ring-blue-400"
-        onClick={handleSend}
       />
       <button
         type="button"
         className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800"
+        onClick={handleSend}
       >
         Send
       </button>

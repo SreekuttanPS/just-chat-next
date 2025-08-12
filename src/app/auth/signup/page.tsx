@@ -1,5 +1,6 @@
 "use client";
 
+import Spinner from "@/components/Spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -31,6 +32,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<ErrorState>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const userNameRef = useRef<HTMLInputElement>(null);
@@ -83,6 +85,7 @@ export default function LoginPage() {
     }
 
     try {
+      setIsLoading(true);
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,7 +93,8 @@ export default function LoginPage() {
       });
 
       if (res.ok) {
-        toast.success("User created successfully, Please login.")
+        toast.success("User created successfully, Please login.");
+        setIsLoading(false);
         router.push("/auth/login");
       } else {
         console.log("res: ", res);
@@ -107,20 +111,19 @@ export default function LoginPage() {
             password: body?.password,
           }));
         }
+        setIsLoading(false);
       }
     } catch (e) {
       setError((prev) => ({
         ...prev,
         other: (e as Error)?.message,
       }));
+      setIsLoading(false);
     }
   };
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="flex flex-col gap-3 max-w-sm mx-auto"
-    >
+    <div className="flex flex-col gap-3 max-w-sm mx-auto">
       <input
         ref={nameRef}
         type="text"
@@ -175,8 +178,13 @@ export default function LoginPage() {
       {error?.confirmPassword ? (
         <p className="text-red-500">{error?.confirmPassword}</p>
       ) : null}
-      <button className="bg-blue-500 text-white p-2 rounded-md dark:invert">
+      <button
+        className="bg-blue-500 text-white p-2 rounded-md dark:invert flex items-center justify-center gap-3"
+        disabled={isLoading}
+        onClick={handleLogin}
+      >
         Sign Up
+        {isLoading ? <Spinner /> : null}
       </button>
       <div className="text-center text-xs text-gray-400 mt-6">
         Already have an account? Please{" "}
@@ -184,6 +192,6 @@ export default function LoginPage() {
           <u>Sign in</u>
         </Link>
       </div>
-    </form>
+    </div>
   );
 }

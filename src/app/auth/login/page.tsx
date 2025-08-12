@@ -1,5 +1,6 @@
 "use client";
 
+import Spinner from "@/components/Spinner";
 import { socket } from "@/lib/socket";
 import chatStore from "@/zustand/store";
 import Link from "next/link";
@@ -22,6 +23,8 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<ErrorState>({});
+  const [isLoading, setIsLoading] = useState(false);
+
   const addUser = chatStore((state) => state.addUser);
   const addMessage = chatStore((state) => state.addMessage);
 
@@ -30,8 +33,7 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     // Manual Validation
     const isUserNameValid = username.trim() && userRegEx.test(username);
     if (!isUserNameValid) {
@@ -52,48 +54,51 @@ export default function LoginPage() {
       passwordRef?.current?.focus();
       return;
     }
-
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-
-    if (res.ok) {
-      const body = await res.json();
-      toast.success("Logged in successfully");
-      router.push("/chat");
-      socket.emit("register", body?.data?.username);
-      addUser({ name: body?.data?.name, username: body?.data?.username });
-      addMessage({
-        message: `${body?.data?.username} joined the chat`,
-        timestamp: new Date().toISOString(),
-        messageType: "info",
-        username: { name: body?.data?.name, username: body?.data?.username },
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
       });
-      socket.off("register");
-    } else {
-      const body = (await res.json()) as ErrorState;
-      if (body?.username) {
-        setError((prev) => ({
-          ...prev,
-          username: body?.username,
-        }));
+
+      if (res.ok) {
+        const body = await res.json();
+        toast.success("Logged in successfully");
+        router.push("/chat");
+        socket.emit("register", body?.data?.username);
+        addUser({ name: body?.data?.name, username: body?.data?.username });
+        addMessage({
+          message: `${body?.data?.username} joined the chat`,
+          timestamp: new Date().toISOString(),
+          messageType: "info",
+          username: { name: body?.data?.name, username: body?.data?.username },
+        });
+        socket.off("register");
+        setIsLoading(false);
+      } else {
+        const body = (await res.json()) as ErrorState;
+        if (body?.username) {
+          setError((prev) => ({
+            ...prev,
+            username: body?.username,
+          }));
+        }
+        if (body?.password) {
+          setError((prev) => ({
+            ...prev,
+            password: body?.password,
+          }));
+        }
+        setIsLoading(false);
       }
-      if (body?.password) {
-        setError((prev) => ({
-          ...prev,
-          password: body?.password,
-        }));
-      }
+    } catch {
+      setIsLoading(false);
     }
   };
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="flex flex-col gap-3 max-w-sm mx-auto"
-    >
+    <div className="flex flex-col gap-3 max-w-sm mx-auto">
       <input
         ref={userNameRef}
         type="text"
@@ -122,8 +127,13 @@ export default function LoginPage() {
       {error?.password ? (
         <p className="text-red-500">{error?.password}</p>
       ) : null}
-      <button className="bg-blue-500 text-white p-2 rounded-md dark:invert">
+      <button
+        className="bg-blue-500 text-white p-2 rounded-md dark:invert flex items-center justify-center gap-3"
+        onClick={handleLogin}
+        disabled={isLoading}
+      >
         Login
+        {isLoading ? <Spinner /> : null}
       </button>
       <div className="text-center text-xs text-gray-400 mt-6">
         Don&apos;t have an account? Please{" "}
@@ -131,6 +141,6 @@ export default function LoginPage() {
           <u>Sign up</u>
         </Link>
       </div>
-    </form>
+    </div>
   );
 }
