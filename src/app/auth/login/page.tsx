@@ -103,7 +103,7 @@ export default function LoginPage() {
           setError({});
           setUsername(e.target.value);
         }}
-        className="border p-2 rounded-md dark:text-gray-400 "
+        className="border border-black dark:border-gray-400 p-2 rounded-md text-black dark:text-gray-400"
       />
       {error?.username ? (
         <p className="text-red-500">{error?.username}</p>
@@ -117,7 +117,7 @@ export default function LoginPage() {
           setError({});
           setPassword(e.target.value);
         }}
-        className="border p-2 rounded-md dark:text-gray-400"
+        className="border border-black dark:border-gray-400 p-2 rounded-md text-black dark:text-gray-400"
       />
       {error?.password ? (
         <p className="text-red-500">{error?.password}</p>

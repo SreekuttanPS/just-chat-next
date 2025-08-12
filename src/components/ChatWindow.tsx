@@ -4,16 +4,12 @@ import dynamic from "next/dynamic";
 // Import your timestamp component but disable SSR
 const RecipientChatBubble = dynamic(
   () => import("@/components/RecipientChatBubble"),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
 const SenderChatBubble = dynamic(
   () => import("@/components/SenderChatBubble"),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
 import { Fragment, useEffect, useRef } from "react";
@@ -49,6 +45,13 @@ const ChatWindow = () => {
   useEffect(() => {
     bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, []);
 
   console.log("messages: ", messages);
   return (
