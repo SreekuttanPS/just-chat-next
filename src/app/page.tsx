@@ -1,6 +1,3 @@
-import ChatWindow from "@/components/ChatWindow";
-import UserList from "@/components/UserList";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
