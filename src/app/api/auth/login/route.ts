@@ -48,7 +48,10 @@ export async function POST(req: Request) {
     );
 
     const res = NextResponse.json(
-      { message: "Logged in successfully" },
+      {
+        message: "Logged in successfully",
+        data: { username: user.username, name: user.name },
+      },
       { status: 200 }
     );
     res.cookies.set({

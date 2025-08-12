@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 type ErrorState = {
   name?: string;
@@ -89,6 +90,7 @@ export default function LoginPage() {
       });
 
       if (res.ok) {
+        toast.success("User created successfully, Please login.")
         router.push("/auth/login");
       } else {
         console.log("res: ", res);

@@ -1,8 +1,11 @@
 "use client";
 
+import { socket } from "@/lib/socket";
+import chatStore from "@/zustand/store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 type ErrorState = {
   username?: string;
@@ -19,6 +22,8 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<ErrorState>({});
+  const addUser = chatStore((state) => state.addUser);
+  const addMessage = chatStore((state) => state.addMessage);
 
   const userNameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -55,7 +60,18 @@ export default function LoginPage() {
     });
 
     if (res.ok) {
-      router.push("/dashboard");
+      const body = await res.json();
+      toast.success("Logged in successfully");
+      router.push("/chat");
+      socket.emit("register", body?.data?.username);
+      addUser({ name: body?.data?.name, username: body?.data?.username });
+      addMessage({
+        message: `${body?.data?.username} joined the chat`,
+        timestamp: new Date().toISOString(),
+        messageType: "info",
+        username: { name: body?.data?.name, username: body?.data?.username },
+      });
+      socket.off("register");
     } else {
       const body = (await res.json()) as ErrorState;
       if (body?.username) {
