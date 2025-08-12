@@ -36,10 +36,9 @@ export async function middleware(req: NextRequest) {
   }
 }
 
-// Tell Next.js which routes need protection
 export const config = {
   matcher: [
-    "/api/protected/:path*", // example protected routes
+    "/api/protected/:path*",
     "/dashboard/:path*",
   ],
 };
