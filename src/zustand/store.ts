@@ -21,6 +21,7 @@ type Actions = {
     _data: IncomingMessage & { messageType: "text" | "info" }
   ) => void;
   addUser: (_userData: ChatState["currentUser"]) => void;
+  resetChatState: () => void;
 };
 
 export const chatStore = create<ChatState & Actions>()(
@@ -44,6 +45,11 @@ export const chatStore = create<ChatState & Actions>()(
         set((state) => ({
           ...state,
           currentUser: userData,
+        })),
+      resetChatState: () =>
+        set(() => ({
+          messages: [],
+          currentUser: {} as ChatState["currentUser"],
         })),
     }),
     {

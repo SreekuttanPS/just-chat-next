@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 const UserPanel = () => {
   const addMessage = chatStore((state) => state.addMessage);
   const currentUser = chatStore((state) => state.currentUser);
+  const resetChatState = chatStore((state) => state.resetChatState);
   const router = useRouter();
 
   const onLogout = async () => {
@@ -27,7 +28,8 @@ const UserPanel = () => {
           messageType: "info",
           username: currentUser,
         });
-        toast.success("Logged Out!")
+        toast.success("Logged Out!");
+        resetChatState();
         router.push("/");
       }
     } catch {
