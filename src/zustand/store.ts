@@ -1,18 +1,20 @@
+import { IncomingMessage } from "@/types/commonTypes";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type IncomingMessage = {
-  username: { username: string; name: string };
-  message: string;
-  timestamp: string;
+type MessageType = IncomingMessage & {
+  transferType: "sent" | "recieved";
+  messageType: "text" | "info";
+  messageId: string;
 };
 
-export type ChatState = {
-  messages: (IncomingMessage & {
-    transferType: "sent" | "recieved";
-    messageType: "text" | "info";
-    id: string;
-  })[];
+type ChatState = {
+  messages: {
+    mainThread: MessageType[];
+    private: {
+      [key: string]: MessageType[];
+    };
+  };
   currentUser: { username: string; name: string };
 };
 
@@ -21,24 +23,31 @@ type Actions = {
     _data: IncomingMessage & { messageType: "text" | "info" }
   ) => void;
   addUser: (_userData: ChatState["currentUser"]) => void;
+  clearMessages: (dmId?: string) => void;
   resetChatState: () => void;
 };
 
 export const chatStore = create<ChatState & Actions>()(
   persist(
     (set) => ({
-      messages: [],
+      messages: {} as ChatState["messages"],
       currentUser: {} as ChatState["currentUser"],
       addMessage: (data) =>
         set((state) => {
           let transferType: "recieved" | "sent" = "recieved";
-          const id = `${data.username}_${data.timestamp}`;
+          const id = data?.messageId || `${data.username}_${data.timestamp}`;
           if (state.currentUser?.username === data.username?.username) {
             transferType = "sent";
           }
           return {
             ...state,
-            messages: [...state.messages, { ...data, transferType, id }],
+            messages: {
+              ...(state?.messages || {}),
+              mainThread: [
+                ...(state?.messages?.mainThread || []),
+                { ...data, transferType, messageId: id },
+              ],
+            },
           };
         }),
       addUser: (userData) =>
@@ -46,9 +55,31 @@ export const chatStore = create<ChatState & Actions>()(
           ...state,
           currentUser: userData,
         })),
+      clearMessages: (dmId) =>
+        set((state) => {
+          if (dmId) {
+            return {
+              ...state,
+              messages: {
+                ...state.messages,
+                private: {
+                  ...state.messages.private,
+                  [dmId]: [],
+                },
+              },
+            };
+          }
+          return {
+            ...state,
+            messages: {
+              ...state.messages,
+              mainThread: [],
+            },
+          };
+        }),
       resetChatState: () =>
         set(() => ({
-          messages: [],
+          messages: {} as ChatState["messages"],
           currentUser: {} as ChatState["currentUser"],
         })),
     }),

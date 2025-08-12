@@ -1,7 +1,7 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { socket } from "@/lib/socket";
+import { getSocket } from "@/lib/socket";
 import chatStore from "@/zustand/store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,6 +20,8 @@ const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^\s]{6,16}$/;
 const passwordError = "Are you sure this is the password? Check again.";
 
 export default function LoginPage() {
+  const socket = getSocket();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<ErrorState>({});

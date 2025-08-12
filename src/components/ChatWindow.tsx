@@ -1,7 +1,12 @@
 "use client";
 import dynamic from "next/dynamic";
 
-// Import your timestamp component but disable SSR
+import { Fragment, useEffect, useMemo, useRef } from "react";
+import chatStore from "@/zustand/store";
+import { IncomingMessage } from "@/types/commonTypes";
+import { useParams } from "next/navigation";
+import { getSocket } from "@/lib/socket";
+
 const RecipientChatBubble = dynamic(
   () => import("@/components/RecipientChatBubble"),
   { ssr: false }
@@ -12,14 +17,21 @@ const SenderChatBubble = dynamic(
   { ssr: false }
 );
 
-import { Fragment, useEffect, useRef } from "react";
-import chatStore, { IncomingMessage } from "@/zustand/store";
-import { socket } from "@/lib/socket";
-
 const ChatWindow = () => {
+  const socket = getSocket();
+
   const addMessage = chatStore((state) => state.addMessage);
   const messages = chatStore((state) => state.messages);
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const { directMessageId } = useParams();
+
+  const currentMessages = useMemo(() => {
+    if (directMessageId && typeof directMessageId === "string") {
+      return messages?.private?.[directMessageId];
+    }
+    return messages?.mainThread;
+  }, [messages, directMessageId]);
 
   useEffect(() => {
     function onRecievingMessages(response: IncomingMessage) {
@@ -44,7 +56,7 @@ const ChatWindow = () => {
 
   useEffect(() => {
     bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [currentMessages]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -53,15 +65,15 @@ const ChatWindow = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  console.log("messages: ", messages);
+  console.log("messages: ", currentMessages);
   return (
     <div className="flex-1 p-4 overflow-y-auto space-y-4">
-      {!messages.length ? (
+      {!currentMessages?.length ? (
         <div className="text-center text-xs text-gray-400">No messages yet</div>
       ) : null}
-      {messages?.map((messageObj) =>
+      {currentMessages?.map((messageObj) =>
         messageObj.messageType === "text" ? (
-          <Fragment key={messageObj?.id}>
+          <Fragment key={messageObj?.messageId}>
             {messageObj.transferType === "recieved" && (
               <RecipientChatBubble
                 message={messageObj?.message}
@@ -79,7 +91,7 @@ const ChatWindow = () => {
         ) : (
           <div
             className="text-center text-xs text-gray-400"
-            key={messageObj?.id}
+            key={messageObj?.messageId}
           >
             {messageObj?.message}
           </div>

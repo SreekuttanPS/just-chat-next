@@ -1,10 +1,12 @@
 "use client";
 
-import { socket } from "@/lib/socket";
+import { getSocket } from "@/lib/socket";
 import chatStore from "@/zustand/store";
 import React, { useRef, useState } from "react";
 
 const ChatInput = () => {
+  const socket = getSocket();
+
   const [input, setInput] = useState("");
   const currentUser = chatStore((state) => state.currentUser);
   const inputRef = useRef<HTMLInputElement>(null);
