@@ -1,21 +1,15 @@
 "use client";
-import dynamic from "next/dynamic";
 
 import { Fragment, useEffect, useMemo, useRef } from "react";
-import chatStore from "@/zustand/store";
-import { IncomingMessage } from "@/types/commonTypes";
 import { useParams } from "next/navigation";
+
+import { IncomingMessage } from "@/types/commonTypes";
+
 import { getSocket } from "@/lib/socket";
+import chatStore from "@/zustand/store";
 
-const RecipientChatBubble = dynamic(
-  () => import("@/components/RecipientChatBubble"),
-  { ssr: false }
-);
-
-const SenderChatBubble = dynamic(
-  () => import("@/components/SenderChatBubble"),
-  { ssr: false }
-);
+import RecipientChatBubble from "@/components/ChatWindow/RecipientChatBubble";
+import SenderChatBubble from "@/components/ChatWindow/SenderChatBubble";
 
 const ChatWindow = () => {
   const socket = getSocket();
@@ -52,7 +46,7 @@ const ChatWindow = () => {
       socket.off("user left", onUserJoinAndLeave);
       socket.off("user joined", onUserJoinAndLeave);
     };
-  }, [addMessage]);
+  }, [addMessage, socket]);
 
   useEffect(() => {
     bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -65,7 +59,6 @@ const ChatWindow = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  console.log("messages: ", currentMessages);
   return (
     <div className="flex-1 p-4 overflow-y-auto space-y-4">
       {!currentMessages?.length ? (
@@ -79,12 +72,14 @@ const ChatWindow = () => {
                 message={messageObj?.message}
                 timestamp={messageObj?.timestamp}
                 username={messageObj?.username?.name}
+                messageId={messageObj?.messageId}
               />
             )}
             {messageObj.transferType === "sent" && (
               <SenderChatBubble
                 message={messageObj?.message}
                 timestamp={messageObj?.timestamp}
+                messageId={messageObj?.messageId}
               />
             )}
           </Fragment>
