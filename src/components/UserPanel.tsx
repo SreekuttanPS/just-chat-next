@@ -22,11 +22,16 @@ const UserPanel = () => {
       });
 
       if (res.ok) {
+        const timestamp = new Date().toISOString();
+        const messageId = crypto.randomUUID();
+
         addMessage({
           message: `${currentUser?.username} left the chat`,
-          timestamp: new Date().toISOString(),
+          timestamp: timestamp,
           messageType: "info",
-          username: currentUser,
+          user: currentUser,
+          messageId,
+          replyTo: null,
         });
         toast.success("Logged Out!");
         resetChatState();

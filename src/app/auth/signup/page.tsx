@@ -97,7 +97,6 @@ export default function LoginPage() {
         setIsLoading(false);
         router.replace("/auth/login");
       } else {
-        console.log("res: ", res);
         const body = (await res.json()) as ErrorState;
         if (body?.username) {
           setError((prev) => ({

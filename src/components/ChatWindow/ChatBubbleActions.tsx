@@ -35,7 +35,7 @@ const ChatBubbleActions = ({
     >
       <div className="min-w-20">
         <button
-          className="bg-blue-600 py-1 rounded text-white w-full"
+          className="rounded text-white w-full"
           onClick={handleReplyText}
         >
           Reply

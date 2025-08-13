@@ -1,33 +1,25 @@
-import { IncomingMessage } from "@/types/commonTypes";
+import { SocketMessage, StoreMessage } from "@/types/commonTypes";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type MessageType = IncomingMessage & {
-  transferType: "sent" | "recieved";
-  messageType: "text" | "info";
-  messageId: string;
-  replyTo?: {
-    messageId: string;
-    message: string;
-    username: string;
-  };
-};
-
 type ChatState = {
   messages: {
-    mainThread: MessageType[];
+    mainThread: StoreMessage[];
     private: {
-      [key: string]: MessageType[];
+      [key: string]: StoreMessage[];
     };
   };
   currentUser: { username: string; name: string };
-  replyTo?: MessageType | null;
+  replyTo: {
+    messageId: string;
+    message: string;
+    username: string;
+    name: string;
+  } | null;
 };
 
 type Actions = {
-  addMessage: (
-    _data: IncomingMessage & { messageType: "text" | "info" }
-  ) => void;
+  addMessage: (_data: SocketMessage & { messageType: "text" | "info" }) => void;
   addUser: (_userData: ChatState["currentUser"]) => void;
   clearMessages: (dmId?: string) => void;
   resetChatState: () => void;
@@ -44,8 +36,7 @@ export const chatStore = create<ChatState & Actions>()(
       addMessage: (data) =>
         set((state) => {
           let transferType: "recieved" | "sent" = "recieved";
-          const id = data?.messageId || `${data.username}_${data.timestamp}`;
-          if (state.currentUser?.username === data.username?.username) {
+          if (state.currentUser?.username === data?.user?.username) {
             transferType = "sent";
           }
           return {
@@ -54,7 +45,7 @@ export const chatStore = create<ChatState & Actions>()(
               ...(state?.messages || {}),
               mainThread: [
                 ...(state?.messages?.mainThread || []),
-                { ...data, transferType, messageId: id },
+                { ...data, transferType },
               ],
             },
           };
@@ -94,19 +85,31 @@ export const chatStore = create<ChatState & Actions>()(
       addReplyMessage: (messageId, chatType = "main") =>
         set((state) => {
           if (chatType === "main") {
+            const messageObject = state.messages.mainThread.find(
+              (msg) => msg.messageId === messageId
+            );
             return {
               ...state,
-              replyTo: state.messages.mainThread.find(
-                (msg) => msg.messageId === messageId
-              ),
+              replyTo: {
+                messageId: messageObject?.messageId || "",
+                message: messageObject?.message || "",
+                username: messageObject?.user?.username || "",
+                name: messageObject?.user?.name || "",
+              },
             };
           }
 
+          const messageObject = state.messages.private[chatType]?.find(
+            (msg) => msg.messageId === messageId
+          );
           return {
             ...state,
-            replyTo: state.messages.private[chatType]?.find(
-              (msg) => msg.messageId === messageId
-            ),
+            replyTo: {
+              messageId: messageObject?.messageId || "",
+              message: messageObject?.message || "",
+              username: messageObject?.user?.username || "",
+              name: messageObject?.user?.name || "",
+            },
           };
         }),
       removeReplyMessage: () =>

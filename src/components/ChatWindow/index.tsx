@@ -3,13 +3,12 @@
 import { Fragment, useEffect, useMemo, useRef } from "react";
 import { useParams } from "next/navigation";
 
-import { IncomingMessage } from "@/types/commonTypes";
-
 import { getSocket } from "@/lib/socket";
 import chatStore from "@/zustand/store";
 
 import RecipientChatBubble from "@/components/ChatWindow/RecipientChatBubble";
 import SenderChatBubble from "@/components/ChatWindow/SenderChatBubble";
+import { SocketMessage } from "@/types/commonTypes";
 
 const ChatWindow = () => {
   const socket = getSocket();
@@ -28,12 +27,13 @@ const ChatWindow = () => {
   }, [messages, directMessageId]);
 
   useEffect(() => {
-    function onRecievingMessages(response: IncomingMessage) {
-      console.log("response: ", response);
+    function onRecievingMessages(response: SocketMessage) {
+      console.log("onRecievingMessages: ", response);
       addMessage({ ...response, messageType: "text" });
     }
 
-    function onUserJoinAndLeave(response: IncomingMessage) {
+    function onUserJoinAndLeave(response: SocketMessage) {
+      console.log("onUserJoinAndLeave: ", response);
       addMessage({ ...response, messageType: "info" });
     }
 
@@ -59,6 +59,8 @@ const ChatWindow = () => {
     return () => clearTimeout(timeout);
   }, []);
 
+  console.log("currentMessages: ", currentMessages);
+
   return (
     <div className="flex-1 p-4 overflow-y-auto space-y-4">
       {!currentMessages?.length ? (
@@ -71,8 +73,9 @@ const ChatWindow = () => {
               <RecipientChatBubble
                 message={messageObj?.message}
                 timestamp={messageObj?.timestamp}
-                username={messageObj?.username?.name}
+                username={messageObj?.user?.name}
                 messageId={messageObj?.messageId}
+                replyTo={messageObj?.replyTo}
               />
             )}
             {messageObj.transferType === "sent" && (
@@ -80,6 +83,7 @@ const ChatWindow = () => {
                 message={messageObj?.message}
                 timestamp={messageObj?.timestamp}
                 messageId={messageObj?.messageId}
+                replyTo={messageObj?.replyTo}
               />
             )}
           </Fragment>

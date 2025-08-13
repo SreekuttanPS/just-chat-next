@@ -14,17 +14,22 @@ const ChatInput = () => {
   const router = useRouter();
 
   const [input, setInput] = useState("");
-  const currentUser = chatStore((state) => state.currentUser);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const currentUser = chatStore((state) => state.currentUser);
+  const replyTo = chatStore((state) => state.replyTo);
+  const removeReplyMessage = chatStore((state) => state.removeReplyMessage);
 
   const handleSend = () => {
     if (input.trim()) {
       socket.emit("chat message", {
         message: input,
-        username: currentUser,
+        user: currentUser,
+        replyTo: replyTo,
       });
       setInput("");
       inputRef.current?.focus();
+      removeReplyMessage();
     }
   };
 

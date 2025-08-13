@@ -70,11 +70,17 @@ export default function LoginPage() {
         router.replace("/chat");
         socket.emit("register", body?.data?.username);
         addUser({ name: body?.data?.name, username: body?.data?.username });
+
+        const timestamp = new Date().toISOString();
+        const messageId = crypto.randomUUID();
+
         addMessage({
           message: `${body?.data?.username} joined the chat`,
-          timestamp: new Date().toISOString(),
+          timestamp: timestamp,
           messageType: "info",
-          username: { name: body?.data?.name, username: body?.data?.username },
+          messageId: messageId,
+          user: { name: body?.data?.name, username: body?.data?.username },
+          replyTo: null,
         });
         socket.off("register");
         setIsLoading(false);
