@@ -95,7 +95,7 @@ export default function LoginPage() {
       if (res.ok) {
         toast.success("User created successfully, Please login.");
         setIsLoading(false);
-        router.push("/auth/login");
+        router.replace("/auth/login");
       } else {
         console.log("res: ", res);
         const body = (await res.json()) as ErrorState;

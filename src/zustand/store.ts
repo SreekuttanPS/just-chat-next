@@ -6,6 +6,11 @@ type MessageType = IncomingMessage & {
   transferType: "sent" | "recieved";
   messageType: "text" | "info";
   messageId: string;
+  replyTo?: {
+    messageId: string;
+    message: string;
+    username: string;
+  };
 };
 
 type ChatState = {
@@ -16,6 +21,7 @@ type ChatState = {
     };
   };
   currentUser: { username: string; name: string };
+  replyTo?: MessageType | null;
 };
 
 type Actions = {
@@ -25,6 +31,8 @@ type Actions = {
   addUser: (_userData: ChatState["currentUser"]) => void;
   clearMessages: (dmId?: string) => void;
   resetChatState: () => void;
+  addReplyMessage: (messageId: string, chatType?: string) => void;
+  removeReplyMessage: () => void;
 };
 
 export const chatStore = create<ChatState & Actions>()(
@@ -32,6 +40,7 @@ export const chatStore = create<ChatState & Actions>()(
     (set) => ({
       messages: {} as ChatState["messages"],
       currentUser: {} as ChatState["currentUser"],
+      replyTo: null,
       addMessage: (data) =>
         set((state) => {
           let transferType: "recieved" | "sent" = "recieved";
@@ -82,6 +91,29 @@ export const chatStore = create<ChatState & Actions>()(
           messages: {} as ChatState["messages"],
           currentUser: {} as ChatState["currentUser"],
         })),
+      addReplyMessage: (messageId, chatType = "main") =>
+        set((state) => {
+          if (chatType === "main") {
+            return {
+              ...state,
+              replyTo: state.messages.mainThread.find(
+                (msg) => msg.messageId === messageId
+              ),
+            };
+          }
+
+          return {
+            ...state,
+            replyTo: state.messages.private[chatType]?.find(
+              (msg) => msg.messageId === messageId
+            ),
+          };
+        }),
+      removeReplyMessage: () =>
+        set((state) => ({
+          ...state,
+          replyTo: null,
+        })),
     }),
     {
       name: "just-chat-store", // name of the item in the storage.
@@ -90,26 +122,3 @@ export const chatStore = create<ChatState & Actions>()(
 );
 
 export default chatStore;
-
-// export const chatStore = create<ChatState & Actions>()((set) => ({
-//   messages: [],
-//   currentUser: "",
-//   addMessage: (data) =>
-//     set((state) => {
-//       let transferType: "recieved" | "sent" = "recieved";
-//       const random = Math.random().toString(36).substring(2, 10);
-//       const id = `${data.username}_${data.timestamp}_${random}`;
-//       if (state.currentUser === data.username) {
-//         transferType = "sent";
-//       }
-//       return {
-//         ...state,
-//         messages: [...state.messages, { ...data, transferType, id }],
-//       };
-//     }),
-//   addUser: (userData) =>
-//     set((state) => ({
-//       ...state,
-//       currentUser: userData,
-//     })),
-// }));

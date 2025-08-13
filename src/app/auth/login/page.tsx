@@ -67,7 +67,7 @@ export default function LoginPage() {
       if (res.ok) {
         const body = await res.json();
         toast.success("Logged in successfully");
-        router.push("/chat");
+        router.replace("/chat");
         socket.emit("register", body?.data?.username);
         addUser({ name: body?.data?.name, username: body?.data?.username });
         addMessage({
