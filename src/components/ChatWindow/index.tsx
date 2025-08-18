@@ -28,12 +28,10 @@ const ChatWindow = () => {
 
   useEffect(() => {
     function onRecievingMessages(response: SocketMessage) {
-      console.log("onRecievingMessages: ", response);
       addMessage({ ...response, messageType: "text" });
     }
 
     function onUserJoinAndLeave(response: SocketMessage) {
-      console.log("onUserJoinAndLeave: ", response);
       addMessage({ ...response, messageType: "info" });
     }
 
@@ -58,8 +56,6 @@ const ChatWindow = () => {
     }, 500);
     return () => clearTimeout(timeout);
   }, []);
-
-  console.log("currentMessages: ", currentMessages);
 
   return (
     <div className="flex-1 p-4 overflow-y-auto space-y-4">

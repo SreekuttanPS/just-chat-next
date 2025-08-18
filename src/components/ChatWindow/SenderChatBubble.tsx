@@ -26,8 +26,6 @@ const SenderChatBubble = ({
     [timestamp]
   );
 
-  console.log("replyTo: ", replyTo);
-
   return (
     <div className="flex items-center gap-2 justify-end">
       <div>

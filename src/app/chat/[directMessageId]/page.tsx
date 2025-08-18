@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import chatImage from "@/assets/chat.svg";
-import UserList from "@/components/UserList";
+import UserList from "@/components/LeftPanel";
 import ChatWindow from "@/components/ChatWindow";
 import ChatInput from "@/components/ChatInput";
 
