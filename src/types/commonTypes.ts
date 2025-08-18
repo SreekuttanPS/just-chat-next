@@ -2,6 +2,7 @@ export type SocketMessage = {
   message: string;
   timestamp: string;
   messageId: string;
+  messageType: "text" | "info";
   user: {
     name: string;
     username: string;
@@ -16,7 +17,6 @@ export type SocketMessage = {
 
 export type StoreMessage = SocketMessage & {
   transferType: "sent" | "recieved";
-  messageType: "text" | "info";
 };
 
 export type UserListItem = {

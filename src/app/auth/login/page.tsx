@@ -68,7 +68,7 @@ export default function LoginPage() {
         const body = await res.json();
         toast.success("Logged in successfully");
         router.replace("/chat");
-        socket.emit("register", { name: body?.data?.name, username: body?.data?.username });
+        // socket.emit("register", { name: body?.data?.name, username: body?.data?.username });
         addUser({ name: body?.data?.name, username: body?.data?.username });
 
         const timestamp = new Date().toISOString();
@@ -82,7 +82,7 @@ export default function LoginPage() {
           user: { name: body?.data?.name, username: body?.data?.username },
           replyTo: null,
         });
-        socket.off("register");
+        // socket.off("register");
         setIsLoading(false);
       } else {
         const body = (await res.json()) as ErrorState;

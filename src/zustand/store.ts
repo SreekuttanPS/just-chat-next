@@ -20,7 +20,7 @@ type ChatState = {
 };
 
 type Actions = {
-  addMessage: (_data: SocketMessage & { messageType: "text" | "info" }) => void;
+  addMessage: (_data: SocketMessage) => void;
   addUser: (_userData: ChatState["currentUser"]) => void;
   clearMessages: (dmId?: string) => void;
   resetChatState: () => void;
