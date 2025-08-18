@@ -1,4 +1,4 @@
-import { SocketMessage, StoreMessage } from "@/types/commonTypes";
+import { SocketMessage, StoreMessage, UserListItem } from "@/types/commonTypes";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -10,6 +10,7 @@ type ChatState = {
     };
   };
   currentUser: { username: string; name: string };
+  allOnlineUsers: UserListItem[];
   replyTo: {
     messageId: string;
     message: string;
@@ -25,6 +26,7 @@ type Actions = {
   resetChatState: () => void;
   addReplyMessage: (messageId: string, chatType?: string) => void;
   removeReplyMessage: () => void;
+  updateOnlineUsers: (users: UserListItem[]) => void;
 };
 
 export const chatStore = create<ChatState & Actions>()(
@@ -32,6 +34,7 @@ export const chatStore = create<ChatState & Actions>()(
     (set) => ({
       messages: {} as ChatState["messages"],
       currentUser: {} as ChatState["currentUser"],
+      allOnlineUsers: [],
       replyTo: null,
       addMessage: (data) =>
         set((state) => {
@@ -116,6 +119,11 @@ export const chatStore = create<ChatState & Actions>()(
         set((state) => ({
           ...state,
           replyTo: null,
+        })),
+      updateOnlineUsers: (users) =>
+        set((state) => ({
+          ...state,
+          allOnlineUsers: users,
         })),
     }),
     {

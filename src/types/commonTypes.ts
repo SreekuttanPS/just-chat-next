@@ -18,3 +18,9 @@ export type StoreMessage = SocketMessage & {
   transferType: "sent" | "recieved";
   messageType: "text" | "info";
 };
+
+export type UserListItem = {
+  socketId: string;
+  username: string;
+  name: string;
+};

@@ -3,17 +3,12 @@
 import { Fragment, useEffect, useMemo, useRef } from "react";
 import { useParams } from "next/navigation";
 
-import { getSocket } from "@/lib/socket";
 import chatStore from "@/zustand/store";
 
 import RecipientChatBubble from "@/components/ChatWindow/RecipientChatBubble";
 import SenderChatBubble from "@/components/ChatWindow/SenderChatBubble";
-import { SocketMessage } from "@/types/commonTypes";
 
 const ChatWindow = () => {
-  const socket = getSocket();
-
-  const addMessage = chatStore((state) => state.addMessage);
   const messages = chatStore((state) => state.messages);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -25,26 +20,6 @@ const ChatWindow = () => {
     }
     return messages?.mainThread;
   }, [messages, directMessageId]);
-
-  useEffect(() => {
-    function onRecievingMessages(response: SocketMessage) {
-      addMessage({ ...response, messageType: "text" });
-    }
-
-    function onUserJoinAndLeave(response: SocketMessage) {
-      addMessage({ ...response, messageType: "info" });
-    }
-
-    socket.on("user joined", onUserJoinAndLeave);
-    socket.on("user left", onUserJoinAndLeave);
-    socket.on("chat message", onRecievingMessages);
-
-    return () => {
-      socket.off("chat message", onRecievingMessages);
-      socket.off("user left", onUserJoinAndLeave);
-      socket.off("user joined", onUserJoinAndLeave);
-    };
-  }, [addMessage, socket]);
 
   useEffect(() => {
     bottomRef?.current?.scrollIntoView({ behavior: "smooth" });

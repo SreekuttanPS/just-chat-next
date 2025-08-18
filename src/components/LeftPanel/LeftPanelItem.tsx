@@ -1,9 +1,9 @@
 "use client";
+import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 import chatImage from "@/assets/chat.svg";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
 
 type Props = {
   title: string;
@@ -16,9 +16,6 @@ const LeftPanelItem = (props: Props) => {
   const pathname = usePathname();
   const currentPathName = pathname.split("/");
   const currentSegment = currentPathName[currentPathName?.length - 1];
-  console.log("props?.isOnline: ", props?.isOnline);
-  console.log("props?.chatName: ", props?.chatName);
-  console.log("");
   return (
     <Link
       className={`flex items-center gap-3 p-3 ${

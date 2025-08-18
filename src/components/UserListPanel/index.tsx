@@ -1,6 +1,7 @@
 import SearchUser from "@/components/UserListPanel/SearchUser";
+import UserList from "@/components/UserListPanel/UserList";
 
-function UserList() {
+function UserListPanel() {
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-gray-950">
       <div className="flex items-center justify-between p-4 border-b dark:border-gray-800">
@@ -15,9 +16,9 @@ function UserList() {
           <button type="button">⋮</button>
         </div> */}
       </div>
-      Test
+      <UserList />
     </div>
   );
 }
 
-export default UserList;
+export default UserListPanel;
