@@ -5,7 +5,7 @@ import { SocketMessage, UserListItem } from "@/types/commonTypes";
 import chatStore from "@/zustand/store";
 import { useEffect, useRef } from "react";
 
-function AllSocketConnections() {
+function SocketBridge() {
   const socketRef = useRef(getSocket());
 
   const updateOnlineUsers = chatStore((state) => state?.updateOnlineUsers);
@@ -65,4 +65,4 @@ function AllSocketConnections() {
   return null;
 }
 
-export default AllSocketConnections;
+export default SocketBridge;

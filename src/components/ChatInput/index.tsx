@@ -9,7 +9,7 @@ import { getSocket } from "@/lib/socket";
 
 import ReplyTextContainer from "@/components/ChatInput/ReplyTextContainer";
 
-const ChatInput = () => {
+const ChatInput = ({ isDm = false }: { isDm?: boolean }) => {
   const socketRef = useRef(getSocket());
   const socket = socketRef.current;
   const router = useRouter();

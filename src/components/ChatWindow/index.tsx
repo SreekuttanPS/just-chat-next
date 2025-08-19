@@ -8,7 +8,7 @@ import chatStore from "@/zustand/store";
 import RecipientChatBubble from "@/components/ChatWindow/RecipientChatBubble";
 import SenderChatBubble from "@/components/ChatWindow/SenderChatBubble";
 
-const ChatWindow = () => {
+const ChatWindow = ({ isDm = false }: { isDm?: boolean }) => {
   const messages = chatStore((state) => state.messages);
   const bottomRef = useRef<HTMLDivElement>(null);
 
