@@ -41,8 +41,7 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSignup = async () => {
     // Manual Validation
     const isNameValid = !!name.trim() && name.length >= 3;
     if (!isNameValid) {
@@ -132,6 +131,11 @@ export default function LoginPage() {
           setError({});
           setName(e.target.value);
         }}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            handleSignup();
+          }
+        }}
         className="border border-black dark:border-gray-400 p-2 rounded-md text-black dark:text-gray-400"
       />
       {error?.name ? <p className="text-red-500">{error?.name}</p> : null}
@@ -143,6 +147,11 @@ export default function LoginPage() {
         onChange={(e) => {
           setError({});
           setUsername(e.target.value);
+        }}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            handleSignup();
+          }
         }}
         className="border border-black dark:border-gray-400 p-2 rounded-md text-black dark:text-gray-400"
       />
@@ -158,6 +167,11 @@ export default function LoginPage() {
           setError({});
           setPassword(e.target.value);
         }}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            handleSignup();
+          }
+        }}
         className="border border-black dark:border-gray-400 p-2 rounded-md text-black dark:text-gray-400"
       />
       {error?.password ? (
@@ -172,6 +186,11 @@ export default function LoginPage() {
           setError({});
           setConfirmPassword(e.target.value);
         }}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            handleSignup();
+          }
+        }}
         className="border border-black dark:border-gray-400 p-2 rounded-md text-black dark:text-gray-400"
       />
       {error?.confirmPassword ? (
@@ -180,7 +199,7 @@ export default function LoginPage() {
       <button
         className="bg-blue-500 text-white p-2 rounded-md dark:invert flex items-center justify-center gap-3"
         disabled={isLoading}
-        onClick={handleLogin}
+        onClick={handleSignup}
       >
         Sign Up
         {isLoading ? <Spinner /> : null}

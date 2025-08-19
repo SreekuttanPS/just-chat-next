@@ -1,7 +1,6 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import { getSocket } from "@/lib/socket";
 import chatStore from "@/zustand/store";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,8 +19,6 @@ const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^\s]{6,16}$/;
 const passwordError = "Are you sure this is the password? Check again.";
 
 export default function LoginPage() {
-  const socket = getSocket();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<ErrorState>({});
@@ -68,7 +65,6 @@ export default function LoginPage() {
         const body = await res.json();
         toast.success("Logged in successfully");
         router.replace("/chat");
-        // socket.emit("register", { name: body?.data?.name, username: body?.data?.username });
         addUser({ name: body?.data?.name, username: body?.data?.username });
 
         const timestamp = new Date().toISOString();
@@ -82,7 +78,6 @@ export default function LoginPage() {
           user: { name: body?.data?.name, username: body?.data?.username },
           replyTo: null,
         });
-        // socket.off("register");
         setIsLoading(false);
       } else {
         const body = (await res.json()) as ErrorState;
@@ -116,6 +111,11 @@ export default function LoginPage() {
           setError({});
           setUsername(e.target.value);
         }}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            handleLogin();
+          }
+        }}
         className="border border-black dark:border-gray-400 p-2 rounded-md text-black dark:text-gray-400"
       />
       {error?.username ? (
@@ -129,6 +129,11 @@ export default function LoginPage() {
         onChange={(e) => {
           setError({});
           setPassword(e.target.value);
+        }}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") {
+            handleLogin();
+          }
         }}
         className="border border-black dark:border-gray-400 p-2 rounded-md text-black dark:text-gray-400"
       />

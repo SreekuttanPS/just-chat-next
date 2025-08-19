@@ -40,6 +40,7 @@ function AllSocketConnections() {
       socket.off("user joined", onRecievingMessages);
     };
   }, [addMessage, socket, updateOnlineUsers]);
+
   useEffect(() => {
     const isUserLoggedIn = !!currentUser?.username;
     const isUserInOnlineList = allOnlineUsers?.some(
