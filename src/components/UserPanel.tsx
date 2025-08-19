@@ -9,7 +9,6 @@ import chatStore from "@/zustand/store";
 import toast from "react-hot-toast";
 
 const UserPanel = () => {
-  const addMessage = chatStore((state) => state.addMessage);
   const currentUser = chatStore((state) => state.currentUser);
   const resetChatState = chatStore((state) => state.resetChatState);
   const router = useRouter();
@@ -22,17 +21,6 @@ const UserPanel = () => {
       });
 
       if (res.ok) {
-        const timestamp = new Date().toISOString();
-        const messageId = crypto.randomUUID();
-
-        addMessage({
-          message: `${currentUser?.username} left the chat`,
-          timestamp: timestamp,
-          messageType: "info",
-          user: currentUser,
-          messageId,
-          replyTo: null,
-        });
         toast.success("Logged Out!");
         resetChatState();
         router.push("/");

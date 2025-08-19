@@ -10,7 +10,8 @@ import { getSocket } from "@/lib/socket";
 import ReplyTextContainer from "@/components/ChatInput/ReplyTextContainer";
 
 const ChatInput = () => {
-  const socket = getSocket();
+  const socketRef = useRef(getSocket());
+  const socket = socketRef.current;
   const router = useRouter();
 
   const [input, setInput] = useState("");
@@ -22,7 +23,7 @@ const ChatInput = () => {
 
   const handleSend = () => {
     if (input.trim()) {
-      socket.emit("chat message", {
+      socket.emit("chat_message", {
         message: input,
         user: currentUser,
         replyTo: replyTo,

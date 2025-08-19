@@ -25,7 +25,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const addUser = chatStore((state) => state.addUser);
-  const addMessage = chatStore((state) => state.addMessage);
 
   const userNameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -66,18 +65,6 @@ export default function LoginPage() {
         toast.success("Logged in successfully");
         router.replace("/chat");
         addUser({ name: body?.data?.name, username: body?.data?.username });
-
-        const timestamp = new Date().toISOString();
-        const messageId = crypto.randomUUID();
-
-        addMessage({
-          message: `${body?.data?.username} joined the chat`,
-          timestamp: timestamp,
-          messageType: "info",
-          messageId: messageId,
-          user: { name: body?.data?.name, username: body?.data?.username },
-          replyTo: null,
-        });
         setIsLoading(false);
       } else {
         const body = (await res.json()) as ErrorState;

@@ -6,9 +6,11 @@ import Link from "next/link";
 import chatStore from "@/zustand/store";
 
 import chatImage from "@/assets/chat.svg";
+import { getDmRoomName } from "@/utils/commonFunctions";
 
 function UserList() {
   const allOnlineUsers = chatStore((state) => state?.allOnlineUsers);
+  const currentUser = chatStore((state) => state?.currentUser);
 
   return (
     <section className="mt-8">
@@ -40,19 +42,27 @@ function UserList() {
           >
             <Image src={chatImage} alt="" className="h-10 w-10 rounded-xl" />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium">{user?.name}</p>
+              <p className="truncate text-sm font-medium">
+                {user?.name}
+                {currentUser?.username === user?.username ? " (You)" : null}
+              </p>
               <p className="truncate text-xs text-gray-500 dark:text-gray-400">
                 @{user?.username}
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Link
-                href={"/"}
-                className="rounded-xl border border-gray-200 px-2.5 py-1.5 text-xs font-medium bg-gray-400 hover:bg-gray-500 dark:border-gray-800 dark:hover:bg-gray-500"
-              >
-                Chat
-              </Link>
-            </div>
+            {currentUser?.username !== user?.username ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/chat/dm/${getDmRoomName(
+                    currentUser?.username,
+                    user?.username
+                  )}`}
+                  className="rounded-xl border border-gray-200 px-2.5 py-1.5 text-xs font-medium bg-gray-400 hover:bg-gray-500 dark:border-gray-800 dark:hover:bg-gray-500"
+                >
+                  Chat
+                </Link>
+              </div>
+            ) : null}
           </li>
         ))}
       </ul>

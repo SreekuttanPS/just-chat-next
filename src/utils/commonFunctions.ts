@@ -41,3 +41,7 @@ export function formatChatTimestamp(isoString: string): string {
     hour12: true,
   });
 }
+
+export function getDmRoomName(userId1: string, userId2: string) {
+  return `dm:${[userId1, userId2].sort().join(":")}`;
+}

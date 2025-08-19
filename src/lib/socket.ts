@@ -8,6 +8,7 @@ export function getSocket() {
   if (!socket) {
     socket = io(backendURL, {
       transports: ["websocket"],
+      autoConnect: false,
     });
   }
   return socket;
