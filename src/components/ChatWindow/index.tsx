@@ -12,14 +12,17 @@ const ChatWindow = ({ isDm = false }: { isDm?: boolean }) => {
   const messages = chatStore((state) => state.messages);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const { directMessageId } = useParams();
+  const { roomName } = useParams();
+
+  const decodedRoomName = decodeURIComponent(roomName as string);
 
   const currentMessages = useMemo(() => {
-    if (directMessageId && typeof directMessageId === "string") {
-      return messages?.private?.[directMessageId];
+    console.log('decodedRoomName: ', decodedRoomName);
+    if (decodedRoomName && typeof decodedRoomName === "string") {
+      return messages?.private?.[decodedRoomName];
     }
     return messages?.mainThread;
-  }, [messages, directMessageId]);
+  }, [messages, decodedRoomName]);
 
   useEffect(() => {
     bottomRef?.current?.scrollIntoView({ behavior: "smooth" });

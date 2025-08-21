@@ -20,13 +20,15 @@ type ChatState = {
 };
 
 type Actions = {
-  addMessage: (_data: SocketMessage) => void;
+  updateMainThread: (_data: SocketMessage) => void;
+  updateDirectMessage: (_data: SocketMessage, _roomName: string) => void;
   addUser: (_userData: ChatState["currentUser"]) => void;
   clearMessages: (dmId?: string) => void;
   resetChatState: () => void;
   addReplyMessage: (messageId: string, chatType?: string) => void;
   removeReplyMessage: () => void;
   updateOnlineUsers: (users: UserListItem[]) => void;
+  createDirectMessage: (_roomName: string) => void;
 };
 
 export const chatStore = create<ChatState & Actions>()(
@@ -36,7 +38,7 @@ export const chatStore = create<ChatState & Actions>()(
       currentUser: {} as ChatState["currentUser"],
       allOnlineUsers: [],
       replyTo: null,
-      addMessage: (data) =>
+      updateMainThread: (data) =>
         set((state) => {
           let transferType: "recieved" | "sent" = "recieved";
           if (state.currentUser?.username === data?.user?.username) {
@@ -50,6 +52,26 @@ export const chatStore = create<ChatState & Actions>()(
                 ...(state?.messages?.mainThread || []),
                 { ...data, transferType },
               ],
+            },
+          };
+        }),
+      updateDirectMessage: (data, roomName) =>
+        set((state) => {
+          let transferType: "recieved" | "sent" = "recieved";
+          if (state.currentUser?.username === data?.user?.username) {
+            transferType = "sent";
+          }
+          return {
+            ...state,
+            messages: {
+              ...(state?.messages || {}),
+              private: {
+                ...state?.messages?.private,
+                [roomName]: [
+                  ...(state?.messages?.private?.[roomName] || []),
+                  { ...data, transferType },
+                ],
+              },
             },
           };
         }),
@@ -125,6 +147,22 @@ export const chatStore = create<ChatState & Actions>()(
           ...state,
           allOnlineUsers: users,
         })),
+      createDirectMessage: (roomName) =>
+        set((state) => {
+          if (!state.messages.private?.[roomName]) {
+            return {
+              ...state,
+              messages: {
+                ...state?.messages,
+                private: {
+                  ...state?.messages?.private,
+                  [roomName]: [],
+                },
+              },
+            };
+          }
+          return state;
+        }),
     }),
     {
       name: "just-chat-store", // name of the item in the storage.

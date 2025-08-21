@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import SocketBridge from "@/components/SocketBridge";
-
 import "./globals.css";
 
 const geistSans = Geist({
@@ -38,7 +36,6 @@ export default function RootLayout({
       >
         {children}
         <Toaster position="top-center" reverseOrder={false} />
-        <SocketBridge />
       </body>
     </html>
   );

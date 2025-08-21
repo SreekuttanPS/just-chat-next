@@ -4,14 +4,16 @@ import { getSocket } from "@/lib/socket";
 import { SocketMessage, UserListItem } from "@/types/commonTypes";
 import chatStore from "@/zustand/store";
 import { useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 function SocketBridge() {
   const socketRef = useRef(getSocket());
 
   const updateOnlineUsers = chatStore((state) => state?.updateOnlineUsers);
-  const addMessage = chatStore((state) => state.addMessage);
+  const updateMainThread = chatStore((state) => state.updateMainThread);
   const currentUser = chatStore((state) => state.currentUser);
   const allOnlineUsers = chatStore((state) => state.allOnlineUsers);
+  const createDirectMessage = chatStore((state) => state.createDirectMessage);
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -31,21 +33,32 @@ function SocketBridge() {
     }
 
     function onRecievingMessages(response: SocketMessage) {
-      addMessage({ ...response });
+      updateMainThread({ ...response });
+    }
+
+    function onDmStart(reciever: string, roomName: string) {
+      toast.success(`Started DM with ${reciever}`);
+      createDirectMessage(roomName);
     }
 
     socket.on("user_joined", onRecievingMessages);
     socket.on("user_left", onRecievingMessages);
     socket.on("chat_message", onRecievingMessages);
     socket.on("get_all_users", handleUsers);
-
+    socket.on(
+      "dm_started",
+      ({ reciever, roomName }: { reciever: string; roomName: string }) => {
+        onDmStart(reciever, roomName);
+      }
+    );
     return () => {
       socket.off("get_all_users", handleUsers);
       socket.off("chat_message", onRecievingMessages);
       socket.off("user_left", onRecievingMessages);
       socket.off("user_joined", onRecievingMessages);
+      socket.off("dm_started", onDmStart);
     };
-  }, [addMessage, updateOnlineUsers]);
+  }, [createDirectMessage, updateMainThread, updateOnlineUsers]);
 
   useEffect(() => {
     const socket = socketRef.current;

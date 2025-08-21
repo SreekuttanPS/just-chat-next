@@ -1,4 +1,5 @@
 import LeftPanel from "@/components/LeftPanel";
+import SocketBridge from "@/components/SocketBridge";
 
 export default function ChatLayout({
   children,
@@ -9,7 +10,7 @@ export default function ChatLayout({
     <section>
       <div className="flex flex-col md:flex-row h-screen bg-gray-100 dark:bg-gray-900">
         <LeftPanel />
-
+        <SocketBridge />
         {children}
       </div>
     </section>
