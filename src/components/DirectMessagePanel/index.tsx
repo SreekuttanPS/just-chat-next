@@ -13,8 +13,8 @@ export default function DirectMessagePanel({ roomName }: { roomName: string }) {
         </div> */}
       </div>
 
-      <ChatWindow isDm />
-      <ChatInput isDm />
+      <ChatWindow />
+      <ChatInput  />
     </div>
   );
 }

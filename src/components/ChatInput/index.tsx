@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -9,20 +9,33 @@ import { getSocket } from "@/lib/socket";
 
 import ReplyTextContainer from "@/components/ChatInput/ReplyTextContainer";
 
-const ChatInput = ({ isDm = false }: { isDm?: boolean }) => {
-  const socketRef = useRef(getSocket());
-  const socket = socketRef.current;
+const ChatInput = () => {
   const router = useRouter();
-
+  const { roomName } = useParams();
   const [input, setInput] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const currentUser = chatStore((state) => state.currentUser);
   const replyTo = chatStore((state) => state.replyTo);
+  const decodedRoomName = roomName
+    ? decodeURIComponent(roomName as string)
+    : "";
+
+  const socketRef = useRef(getSocket());
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const removeReplyMessage = chatStore((state) => state.removeReplyMessage);
 
   const handleSend = () => {
+    const socket = socketRef.current;
     if (input.trim()) {
+      if (decodedRoomName) {
+        const message = {
+          message: input,
+          user: currentUser,
+          replyTo: replyTo,
+        };
+        socket.emit("dm_message", { roomName: decodedRoomName, message });
+      }
       socket.emit("chat_message", {
         message: input,
         user: currentUser,

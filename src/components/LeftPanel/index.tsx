@@ -12,6 +12,7 @@ const LeftNavbar = () => {
           title="See All Online Users"
           isOnline={false}
           imageClass="invert hue-rotate-90"
+          isCommonItem
         />
 
         <LeftPanelItem chatName="chat" title="Common Group" isOnline />

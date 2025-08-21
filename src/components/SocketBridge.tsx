@@ -11,6 +11,7 @@ function SocketBridge() {
 
   const updateOnlineUsers = chatStore((state) => state?.updateOnlineUsers);
   const updateMainThread = chatStore((state) => state.updateMainThread);
+  const updateDirectMessage = chatStore((state) => state.updateDirectMessage);
   const createDirectMessage = chatStore((state) => state.createDirectMessage);
 
   const currentUser = chatStore((state) => state.currentUser);
@@ -34,13 +35,18 @@ function SocketBridge() {
     }
 
     function onRecievingMessages(response: SocketMessage) {
-      updateMainThread({ ...response });
+      updateMainThread(response);
     }
 
     function onDmStart(reciever: string, roomName: string) {
       console.log("hit");
       toast.success(`${reciever} is in the DM`);
       createDirectMessage(roomName);
+    }
+
+    function onRecievingDm(data: { roomName: string; message: SocketMessage }) {
+      console.log("data: ", data);
+      updateDirectMessage(data?.message, data?.roomName);
     }
 
     socket.on("user_joined", onRecievingMessages);
@@ -53,14 +59,22 @@ function SocketBridge() {
         onDmStart(reciever, roomName);
       }
     );
+    socket.on("dm_message", onRecievingDm);
+
     return () => {
       socket.off("get_all_users", handleUsers);
       socket.off("chat_message", onRecievingMessages);
       socket.off("user_left", onRecievingMessages);
       socket.off("user_joined", onRecievingMessages);
       socket.off("dm_started", onDmStart);
+      socket.off("dm_message", onRecievingDm);
     };
-  }, [createDirectMessage, updateMainThread, updateOnlineUsers]);
+  }, [
+    createDirectMessage,
+    updateDirectMessage,
+    updateMainThread,
+    updateOnlineUsers,
+  ]);
 
   useEffect(() => {
     const socket = socketRef.current;

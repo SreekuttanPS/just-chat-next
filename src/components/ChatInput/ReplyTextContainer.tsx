@@ -1,9 +1,15 @@
 import chatStore from "@/zustand/store";
-import React from "react";
+import React, { useEffect } from "react";
 
 const ReplyTextContainer = () => {
   const replyTo = chatStore((state) => state.replyTo);
   const removeReplyMessage = chatStore((state) => state.removeReplyMessage);
+
+  useEffect(() => {
+    return () => {
+      removeReplyMessage();
+    };
+  }, [removeReplyMessage]);
 
   if (!replyTo) {
     return null;

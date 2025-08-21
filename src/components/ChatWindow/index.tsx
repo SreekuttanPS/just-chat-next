@@ -8,13 +8,15 @@ import chatStore from "@/zustand/store";
 import RecipientChatBubble from "@/components/ChatWindow/RecipientChatBubble";
 import SenderChatBubble from "@/components/ChatWindow/SenderChatBubble";
 
-const ChatWindow = ({ isDm = false }: { isDm?: boolean }) => {
+const ChatWindow = () => {
   const messages = chatStore((state) => state.messages);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const { roomName } = useParams();
 
-  const decodedRoomName = decodeURIComponent(roomName as string);
+  const decodedRoomName = roomName
+    ? decodeURIComponent(roomName as string)
+    : "";
 
   const currentMessages = useMemo(() => {
     if (decodedRoomName && typeof decodedRoomName === "string") {
