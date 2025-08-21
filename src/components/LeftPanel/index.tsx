@@ -1,5 +1,6 @@
 import UserPanel from "@/components/UserPanel";
 import LeftPanelItem from "@/components/LeftPanel/LeftPanelItem";
+import DirectMessageList from "./DirectMessageList";
 
 const LeftNavbar = () => {
   return (
@@ -14,6 +15,7 @@ const LeftNavbar = () => {
         />
 
         <LeftPanelItem chatName="chat" title="Common Group" isOnline />
+        <DirectMessageList />
       </div>
     </div>
   );

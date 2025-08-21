@@ -23,7 +23,7 @@ const LeftPanelItem = (props: Props) => {
           ? "bg-white/20 dark:bg-gray-800/40"
           : "hover:bg-white/10 dark:hover:bg-gray-800/20"
       } cursor-pointer`}
-      href={props?.chatName === "chat" ? "/chat" : `/chat/${props?.chatName}`}
+      href={props?.chatName === "chat" ? "/chat" : `/chat/dm/${props?.chatName}`}
     >
       <div className="relative">
         <Image

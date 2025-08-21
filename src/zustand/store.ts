@@ -5,9 +5,7 @@ import { persist } from "zustand/middleware";
 type ChatState = {
   messages: {
     mainThread: StoreMessage[];
-    private: {
-      [key: string]: StoreMessage[];
-    };
+    private: Record<string, StoreMessage[]>;
   };
   currentUser: { username: string; name: string };
   allOnlineUsers: UserListItem[];

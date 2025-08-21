@@ -1,16 +1,31 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import { useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
+import { getDmRoomName } from "@/utils/commonFunctions";
+import { getSocket } from "@/lib/socket";
 import chatStore from "@/zustand/store";
 
 import chatImage from "@/assets/chat.svg";
-import { getDmRoomName } from "@/utils/commonFunctions";
 
 function UserList() {
+  const router = useRouter();
+
   const allOnlineUsers = chatStore((state) => state?.allOnlineUsers);
   const currentUser = chatStore((state) => state?.currentUser);
+
+  const socketRef = useRef(getSocket());
+
+  const startDm = (sender: string, reciever: string) => {
+    const roomName = getDmRoomName(sender, reciever);
+    const chatUrl = `/chat/dm/${roomName}`;
+    router.push(chatUrl);
+    const socket = socketRef?.current;
+    console.log("hit");
+    socket.emit("start_dm", { sender, reciever });
+  };
 
   return (
     <section className="mt-8">
@@ -52,15 +67,12 @@ function UserList() {
             </div>
             {currentUser?.username !== user?.username ? (
               <div className="flex items-center gap-2">
-                <Link
-                  href={`/chat/dm/${getDmRoomName(
-                    currentUser?.username,
-                    user?.username
-                  )}`}
+                <button
+                  onClick={() => startDm(currentUser?.username, user?.username)}
                   className="rounded-xl border border-gray-200 px-2.5 py-1.5 text-xs font-medium bg-gray-400 hover:bg-gray-500 dark:border-gray-800 dark:hover:bg-gray-500"
                 >
                   Chat
-                </Link>
+                </button>
               </div>
             ) : null}
           </li>

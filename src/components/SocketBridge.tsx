@@ -11,9 +11,10 @@ function SocketBridge() {
 
   const updateOnlineUsers = chatStore((state) => state?.updateOnlineUsers);
   const updateMainThread = chatStore((state) => state.updateMainThread);
+  const createDirectMessage = chatStore((state) => state.createDirectMessage);
+
   const currentUser = chatStore((state) => state.currentUser);
   const allOnlineUsers = chatStore((state) => state.allOnlineUsers);
-  const createDirectMessage = chatStore((state) => state.createDirectMessage);
 
   useEffect(() => {
     const socket = socketRef.current;
@@ -37,7 +38,8 @@ function SocketBridge() {
     }
 
     function onDmStart(reciever: string, roomName: string) {
-      toast.success(`Started DM with ${reciever}`);
+      console.log("hit");
+      toast.success(`${reciever} is in the DM`);
       createDirectMessage(roomName);
     }
 
