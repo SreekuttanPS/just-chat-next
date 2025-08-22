@@ -7,6 +7,7 @@ import chatStore from "@/zustand/store";
 
 import RecipientChatBubble from "@/components/ChatWindow/RecipientChatBubble";
 import SenderChatBubble from "@/components/ChatWindow/SenderChatBubble";
+import DmSocketContainer from "./DmSocketContainer";
 
 const ChatWindow = () => {
   const messages = chatStore((state) => state.messages);
@@ -15,13 +16,11 @@ const ChatWindow = () => {
   const { roomName } = useParams();
 
   const decodedRoomName = roomName
-    ? decodeURIComponent(roomName as string)
+    ? decodeURIComponent((roomName || "") as string)
     : "";
 
-    console.log('messages: ', messages);
-
   const currentMessages = useMemo(() => {
-    if (decodedRoomName && typeof decodedRoomName === "string") {
+    if (decodedRoomName) {
       return messages?.private?.[decodedRoomName];
     }
     return messages?.mainThread;
@@ -74,6 +73,9 @@ const ChatWindow = () => {
         )
       )}
       <div ref={bottomRef}></div>
+      {decodedRoomName ? (
+        <DmSocketContainer decodedRoomName={decodedRoomName} />
+      ) : null}
     </div>
   );
 };

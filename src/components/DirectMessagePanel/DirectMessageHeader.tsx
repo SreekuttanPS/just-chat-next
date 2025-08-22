@@ -15,8 +15,6 @@ function DirectMessageHeader({ roomName }: Props) {
   const currentUser = chatStore((state) => state?.currentUser);
   const allOnlineUsers = chatStore((state) => state?.allOnlineUsers);
 
-  console.log('roomName: ', roomName);
-
   const [user1, user2] = parseDmRoomName(roomName);
 
   const reciever = currentUser?.username !== user1 ? user1 : user2;

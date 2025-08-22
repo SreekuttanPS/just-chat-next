@@ -38,22 +38,27 @@ function SocketBridge() {
       type: "main" | "direct";
       data: SocketMessage;
     }) {
-      console.log("main response: ", response);
       if (response?.type === "main") {
         updateMainThread(response?.data);
       }
     }
 
-    function onDmStart(reciever: string, roomName: string) {
-      toast.success(`${reciever} is in the DM`);
-      createDirectMessage(roomName);
+    function onDmStart(response: {
+      reciever: string;
+      roomName: string;
+      showMessage: boolean;
+    }) {
+      console.log('onDmStart: ', response);
+      if (response?.showMessage) {
+        toast.success(`${response?.reciever} is in the DM`);
+      }
+      createDirectMessage(response?.roomName);
     }
 
     function onRecievingDm(response: {
       type: "main" | "direct";
       data: { roomName: string; message: SocketMessage };
     }) {
-      console.log("dm response: ", response);
       if (response?.type === "direct") {
         updateDirectMessage(response?.data?.message, response?.data?.roomName);
       }
@@ -63,12 +68,7 @@ function SocketBridge() {
     socket.on("user_left", onRecievingMessages);
     socket.on("chat_message", onRecievingMessages);
     socket.on("get_all_users", handleUsers);
-    socket.on(
-      "dm_started",
-      ({ reciever, roomName }: { reciever: string; roomName: string }) => {
-        onDmStart(reciever, roomName);
-      }
-    );
+    socket.on("dm_started", onDmStart);
     socket.on("dm_message", onRecievingDm);
 
     return () => {
