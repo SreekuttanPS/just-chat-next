@@ -18,6 +18,8 @@ const ChatWindow = () => {
     ? decodeURIComponent(roomName as string)
     : "";
 
+    console.log('messages: ', messages);
+
   const currentMessages = useMemo(() => {
     if (decodedRoomName && typeof decodedRoomName === "string") {
       return messages?.private?.[decodedRoomName];

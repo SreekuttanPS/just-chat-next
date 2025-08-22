@@ -35,12 +35,13 @@ const ChatInput = () => {
           replyTo: replyTo,
         };
         socket.emit("dm_message", { roomName: decodedRoomName, message });
+      } else {
+        socket.emit("chat_message", {
+          message: input,
+          user: currentUser,
+          replyTo: replyTo,
+        });
       }
-      socket.emit("chat_message", {
-        message: input,
-        user: currentUser,
-        replyTo: replyTo,
-      });
       setInput("");
       inputRef.current?.focus();
       removeReplyMessage();

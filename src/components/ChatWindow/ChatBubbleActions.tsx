@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "next/navigation";
 
 import Tooltip from "@/components/Tooltip";
 import chatStore from "@/zustand/store";
@@ -11,6 +12,10 @@ const ChatBubbleActions = ({
   position: "left" | "right";
 }) => {
   const addReplyMessage = chatStore((state) => state.addReplyMessage);
+  const { roomName } = useParams();
+  const decodedRoomName = roomName
+    ? decodeURIComponent((roomName || "") as string)
+    : "";
 
   const className =
     position === "left"
@@ -18,7 +23,11 @@ const ChatBubbleActions = ({
       : "bg-gradient-to-r from-gray-400 to-gray-500 dark:from-gray-700 dark:to-gray-800 left-8 -top-5";
 
   const handleReplyText = () => {
-    addReplyMessage(messageId);
+    if (decodedRoomName) {
+      addReplyMessage(messageId, decodedRoomName);
+    } else {
+      addReplyMessage(messageId);
+    }
   };
 
   return (
@@ -34,10 +43,7 @@ const ChatBubbleActions = ({
       }
     >
       <div className="min-w-20">
-        <button
-          className="rounded text-white w-full"
-          onClick={handleReplyText}
-        >
+        <button className="rounded text-white w-full" onClick={handleReplyText}>
           Reply
         </button>
       </div>

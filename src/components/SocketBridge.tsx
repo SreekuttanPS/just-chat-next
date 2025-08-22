@@ -34,19 +34,29 @@ function SocketBridge() {
       updateOnlineUsers(users);
     }
 
-    function onRecievingMessages(response: SocketMessage) {
-      updateMainThread(response);
+    function onRecievingMessages(response: {
+      type: "main" | "direct";
+      data: SocketMessage;
+    }) {
+      console.log("main response: ", response);
+      if (response?.type === "main") {
+        updateMainThread(response?.data);
+      }
     }
 
     function onDmStart(reciever: string, roomName: string) {
-      console.log("hit");
       toast.success(`${reciever} is in the DM`);
       createDirectMessage(roomName);
     }
 
-    function onRecievingDm(data: { roomName: string; message: SocketMessage }) {
-      console.log("data: ", data);
-      updateDirectMessage(data?.message, data?.roomName);
+    function onRecievingDm(response: {
+      type: "main" | "direct";
+      data: { roomName: string; message: SocketMessage };
+    }) {
+      console.log("dm response: ", response);
+      if (response?.type === "direct") {
+        updateDirectMessage(response?.data?.message, response?.data?.roomName);
+      }
     }
 
     socket.on("user_joined", onRecievingMessages);
