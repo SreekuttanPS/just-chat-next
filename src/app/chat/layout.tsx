@@ -1,4 +1,5 @@
 import LeftPanel from "@/components/LeftPanel";
+import NavbarToggle from "@/components/NavbarToggle";
 import SocketBridge from "@/components/SocketBridge";
 
 export default function ChatLayout({
@@ -10,6 +11,8 @@ export default function ChatLayout({
     <section>
       <div className="flex flex-row h-screen bg-gray-100 dark:bg-gray-900">
         <LeftPanel />
+        <NavbarToggle />
+
         <SocketBridge />
         {children}
       </div>

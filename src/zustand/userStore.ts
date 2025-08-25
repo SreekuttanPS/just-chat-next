@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type ChatState = {
+type UserState = {
   currentUser: {
     username: string;
     name: string;
@@ -8,11 +8,11 @@ type ChatState = {
 };
 
 type Actions = {
-  addUser: (_userData: ChatState["currentUser"]) => void;
-  removeUser: (_userData: ChatState["currentUser"]) => void;
+  addUser: (_userData: UserState["currentUser"]) => void;
+  removeUser: () => void;
 };
 
-export const userStore = create<ChatState & Actions>((set) => ({
+export const userStore = create<UserState & Actions>((set) => ({
   currentUser: {
     username: "",
     name: "",

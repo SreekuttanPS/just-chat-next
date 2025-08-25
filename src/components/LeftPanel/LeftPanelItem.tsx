@@ -4,6 +4,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import chatImage from "@/assets/chat.svg";
+import { navbarStore } from "@/zustand/navbarStore";
 
 type Props = {
   title: string;
@@ -17,6 +18,8 @@ const LeftPanelItem = (props: Props) => {
   const pathname = usePathname();
   const currentPathName = pathname.split("/");
   const currentSegment = currentPathName[currentPathName?.length - 1];
+  const toggleNavbar = navbarStore((state) => state?.toggleNavbar);
+
   return (
     <Link
       className={`flex items-center gap-3 p-3 ${
@@ -29,6 +32,7 @@ const LeftPanelItem = (props: Props) => {
           ? "/chat"
           : `/chat${props?.isCommonItem ? "" : "/dm"}/${props?.chatName}`
       }
+      onClick={toggleNavbar}
     >
       <div className="relative">
         <Image

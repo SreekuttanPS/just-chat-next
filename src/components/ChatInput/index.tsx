@@ -63,7 +63,7 @@ const ChatInput = () => {
   return (
     <div>
       <ReplyTextContainer />
-      <div className="p-4 border-t flex gap-3 dark:border-gray-800">
+      <div className="p-4 border-t flex dark:border-gray-800">
         <input
           ref={inputRef}
           value={input}
@@ -73,11 +73,11 @@ const ChatInput = () => {
           name="message"
           id="message"
           placeholder="Type a message..."
-          className="flex-1 px-4 py-2 rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 dark:border-gray-700 dark:focus:ring-blue-400"
+          className="flex-1 px-4 py-2 rounded-full rounded-e-none border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 dark:border-gray-700 dark:focus:ring-blue-400"
         />
         <button
           type="button"
-          className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800"
+          className="bg-blue-500 text-white px-4 py-2 rounded-full rounded-s-none hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800"
           onClick={handleSend}
           disabled={!currentUser?.username}
         >

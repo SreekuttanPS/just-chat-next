@@ -94,6 +94,10 @@ export default function LoginPage() {
     }
   }, [currentUser?.username, router]);
 
+  if (currentUser?.username) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col gap-3 max-w-sm mx-auto">
       <input
