@@ -1,7 +1,8 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
+import { userStore } from "@/zustand/userStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -24,7 +25,7 @@ export default function LoginPage() {
   const [error, setError] = useState<ErrorState>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const addUser = chatStore((state) => state.addUser);
+  const addUser = userStore((state) => state.addUser);
 
   const userNameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);

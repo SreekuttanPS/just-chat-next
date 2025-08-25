@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useMemo, useRef } from "react";
 import { useParams } from "next/navigation";
 
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
 
 import RecipientChatBubble from "@/components/ChatWindow/RecipientChatBubble";
 import SenderChatBubble from "@/components/ChatWindow/SenderChatBubble";

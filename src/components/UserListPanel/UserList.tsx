@@ -2,14 +2,15 @@
 import Image from "next/image";
 
 import { getDmRoomName } from "@/utils/commonFunctions";
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
 
 import chatImage from "@/assets/chat.svg";
 import Link from "next/link";
+import { userStore } from "@/zustand/userStore";
 
 function UserList() {
   const allOnlineUsers = chatStore((state) => state?.allOnlineUsers);
-  const currentUser = chatStore((state) => state?.currentUser);
+  const currentUser = userStore((state) => state?.currentUser);
 
   return (
     <section className="mt-8">

@@ -4,17 +4,18 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
 import { getSocket } from "@/lib/socket";
 
 import ReplyTextContainer from "@/components/ChatInput/ReplyTextContainer";
+import { userStore } from "@/zustand/userStore";
 
 const ChatInput = () => {
   const router = useRouter();
   const { roomName } = useParams();
   const [input, setInput] = useState("");
 
-  const currentUser = chatStore((state) => state.currentUser);
+  const currentUser = userStore((state) => state.currentUser);
   const replyTo = chatStore((state) => state.replyTo);
   const decodedRoomName = roomName
     ? decodeURIComponent(roomName as string)

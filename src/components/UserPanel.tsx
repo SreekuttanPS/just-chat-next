@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 
 import chatImage from "@/assets/chat.svg";
 import logoutImage from "@/assets/logout.svg";
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
 import toast from "react-hot-toast";
+import { userStore } from "@/zustand/userStore";
 
 const UserPanel = () => {
-  const currentUser = chatStore((state) => state.currentUser);
+  const currentUser = userStore((state) => state.currentUser);
   const resetChatState = chatStore((state) => state.resetChatState);
   const router = useRouter();
 

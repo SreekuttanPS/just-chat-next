@@ -2,7 +2,8 @@
 
 import { getSocket } from "@/lib/socket";
 import { SocketMessage, UserListItem } from "@/types/commonTypes";
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
+import { userStore } from "@/zustand/userStore";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 
@@ -14,7 +15,7 @@ function SocketBridge() {
   const updateDirectMessage = chatStore((state) => state.updateDirectMessage);
   const createDirectMessage = chatStore((state) => state.createDirectMessage);
 
-  const currentUser = chatStore((state) => state.currentUser);
+  const currentUser = userStore((state) => state.currentUser);
   const allOnlineUsers = chatStore((state) => state.allOnlineUsers);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ function SocketBridge() {
       data: SocketMessage;
     }) {
       if (response?.type === "main") {
-        updateMainThread(response?.data);
+        updateMainThread(response?.data, currentUser?.username);
       }
     }
 
@@ -48,7 +49,7 @@ function SocketBridge() {
       roomName: string;
       showMessage: boolean;
     }) {
-      console.log('onDmStart: ', response);
+      console.log("onDmStart: ", response);
       if (response?.showMessage) {
         toast.success(`${response?.reciever} is in the DM`);
       }
@@ -60,7 +61,11 @@ function SocketBridge() {
       data: { roomName: string; message: SocketMessage };
     }) {
       if (response?.type === "direct") {
-        updateDirectMessage(response?.data?.message, response?.data?.roomName);
+        updateDirectMessage(
+          response?.data?.message,
+          response?.data?.roomName,
+          currentUser?.username
+        );
       }
     }
 
@@ -81,6 +86,7 @@ function SocketBridge() {
     };
   }, [
     createDirectMessage,
+    currentUser?.username,
     updateDirectMessage,
     updateMainThread,
     updateOnlineUsers,

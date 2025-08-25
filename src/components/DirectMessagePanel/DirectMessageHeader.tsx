@@ -4,15 +4,16 @@ import React from "react";
 import Image from "next/image";
 
 import chatImage from "@/assets/chat.svg";
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
 import { parseDmRoomName } from "@/utils/commonFunctions";
+import { userStore } from "@/zustand/userStore";
 
 type Props = {
   roomName: string;
 };
 
 function DirectMessageHeader({ roomName }: Props) {
-  const currentUser = chatStore((state) => state?.currentUser);
+  const currentUser = userStore((state) => state?.currentUser);
   const allOnlineUsers = chatStore((state) => state?.allOnlineUsers);
 
   const [user1, user2] = parseDmRoomName(roomName);

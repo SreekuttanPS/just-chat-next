@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "next/navigation";
 
 import Tooltip from "@/components/Tooltip";
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
 
 const ChatBubbleActions = ({
   messageId,

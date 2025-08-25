@@ -1,13 +1,14 @@
 "use client";
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
 
 import { parseDmRoomName } from "@/utils/commonFunctions";
 
 import LeftPanelItem from "@/components/LeftPanel/LeftPanelItem";
+import { userStore } from "@/zustand/userStore";
 
 function DirectMessageList() {
   const privateMessages = chatStore((state) => state?.messages?.private);
-  const currentUser = chatStore((state) => state?.currentUser);
+  const currentUser = userStore((state) => state?.currentUser);
   const allOnlineUsers = chatStore((state) => state?.allOnlineUsers);
 
   return Object.keys(privateMessages || {}).map((roomName) => {

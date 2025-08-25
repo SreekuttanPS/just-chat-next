@@ -1,4 +1,4 @@
-import chatStore from "@/zustand/store";
+import chatStore from "@/zustand/chatStore";
 import React, { useEffect } from "react";
 
 const ReplyTextContainer = () => {
