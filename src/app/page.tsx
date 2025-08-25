@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import gitHub from "@/assets/github.svg";
 import linkedIn from "@/assets/linkedin.svg";
-import instagram from '@/assets/instagram.svg'
+import instagram from "@/assets/instagram.svg";
 
 export default function Home() {
   return (
@@ -32,13 +32,18 @@ export default function Home() {
         <br />
         Everything runs on your{" "}
         <span className="font-semibold">local storage</span> for a fast,
-        lightweight experience (so yeah, try not to mess with it unless you&apos;re
-        feeling adventurous).
+        lightweight experience (so yeah, try not to mess with it unless
+        you&apos;re feeling adventurous).
+        <br />
+        <br />
+        ⚠️ Heads up: this project’s still in{" "}
+        <span className="font-semibold">active development</span>, so you might
+        run into the occasional bug or quirk — that’s all part of the ride 🚀.
         <br />
         <br />
         This is just the beginning 🚀 — got a feature idea?{" "}
-        <span className="italic font-bold">Hit me up via my socials</span> and let&apos;s make
-        it happen.
+        <span className="italic font-bold">Hit me up via my socials</span> and
+        let&apos;s make it happen.
       </p>
       {/* Buttons */}
       <div className="flex gap-4 mb-8">
