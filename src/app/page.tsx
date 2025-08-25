@@ -1,8 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import gitHub from "@/assets/github.svg";
 import linkedIn from "@/assets/linkedin.svg";
-import Image from "next/image";
+import instagram from '@/assets/instagram.svg'
 
 export default function Home() {
   return (
@@ -11,7 +12,6 @@ export default function Home() {
       <h1 className="text-4xl sm:text-6xl font-extrabold tracking-wide mb-4">
         Just <span className="text-blue-400">Chat</span>
       </h1>
-
       {/* Description */}
       <p className="text-center max-w-lg text-black mb-6 text-sm sm:text-base leading-relaxed dark:invert">
         <span className="font-bold">Just Chat</span> is your go-to real-time
@@ -20,19 +20,26 @@ export default function Home() {
         <span className="font-semibold">Socket.IO</span>, styled with sleek{" "}
         <span className="font-semibold">Tailwind CSS</span>, and deployed
         globally via <span className="font-semibold">Vercel</span> +{" "}
-        <span className="font-semibold">Render</span>.<br />
+        <span className="font-semibold">Render</span>.
         <br />
-        Right now, we’ve got a lively{" "}
+        <br />
+        We&apos;ve got a lively{" "}
         <span className="font-semibold">common group chat</span> where everyone
-        can vibe together.
-        <span className="italic"> Direct messages?</span> Yeah, they’re in the
-        oven — coming soon to make your convos even more personal.
+        can vibe together, and now —{" "}
+        <span className="font-semibold">direct messages</span> for those
+        one-on-one convos.
         <br />
         <br />
-        This is just the beginning, so hop in and be part of the build-in-public
-        journey 🚀.
+        Everything runs on your{" "}
+        <span className="font-semibold">local storage</span> for a fast,
+        lightweight experience (so yeah, try not to mess with it unless you&apos;re
+        feeling adventurous).
+        <br />
+        <br />
+        This is just the beginning 🚀 — got a feature idea?{" "}
+        <span className="italic font-bold">Hit me up via my socials</span> and let&apos;s make
+        it happen.
       </p>
-
       {/* Buttons */}
       <div className="flex gap-4 mb-8">
         <Link
@@ -48,7 +55,6 @@ export default function Home() {
           Signup
         </Link>
       </div>
-
       {/* Social Links */}
       Check my socials here.
       <div className="flex gap-6 text-2xl mt-2">
@@ -68,6 +74,18 @@ export default function Home() {
         >
           <Image
             src={linkedIn}
+            alt="LinkedIn"
+            className="w-10 h-10 dark:invert"
+          />
+        </a>
+        <a
+          href="https://www.instagram.com/zavian_._/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-gray-400 transition"
+        >
+          <Image
+            src={instagram}
             alt="LinkedIn"
             className="w-10 h-10 dark:invert"
           />
