@@ -3,11 +3,13 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import chatImage from "@/assets/chat.svg";
+import { userStore } from "@/zustand/userStore";
+
+import menuNavigation from "@/assets/menu-navigation.svg";
+import closeMenu from "@/assets/close-menu.svg";
 import logoutImage from "@/assets/logout.svg";
 import chatStore from "@/zustand/chatStore";
 import toast from "react-hot-toast";
-import { userStore } from "@/zustand/userStore";
 
 const UserPanel = () => {
   const currentUser = userStore((state) => state.currentUser);
@@ -34,8 +36,8 @@ const UserPanel = () => {
     <div className="flex items-center justify-between gap-3 p-4 sticky top-0 bg-white/10 backdrop-blur-md shadow-sm dark:bg-gray-900/30">
       <div className="flex items-center gap-3">
         <Image
-          src={chatImage}
-          className="w-10 h-10 rounded-full border-2 border-white"
+          src={closeMenu}
+          className="w-10 h-10 dark:invert"
           alt="Profile"
         />
         <div className="font-semibold">{currentUser?.name || "USER"}</div>

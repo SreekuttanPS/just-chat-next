@@ -1,10 +1,12 @@
 "use client";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 import Spinner from "@/components/Spinner";
-import Link from "next/link";
+
+import { userStore } from "@/zustand/userStore";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import toast from "react-hot-toast";
 
 type ErrorState = {
   name?: string;
@@ -33,6 +35,7 @@ export default function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<ErrorState>({});
   const [isLoading, setIsLoading] = useState(false);
+  const currentUser = userStore((state) => state.currentUser);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const userNameRef = useRef<HTMLInputElement>(null);
@@ -119,6 +122,16 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (currentUser?.username) {
+      router.replace("/chat");
+    }
+  }, [currentUser?.username, router]);
+
+  if (currentUser?.username) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-3 max-w-sm mx-auto">

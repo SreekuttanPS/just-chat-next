@@ -4,7 +4,7 @@ import DirectMessageList from "./DirectMessageList";
 
 const LeftNavbar = () => {
   return (
-    <div className="w-full md:w-1/3 lg:w-1/4 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 dark:text-gray-100 flex flex-col">
+    <div className="w-[90%] md:w-1/3 lg:w-1/4 z-20 fixed md:static h-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 dark:text-gray-100 flex flex-col">
       <UserPanel />
       <div className="overflow-y-auto flex-1">
         <LeftPanelItem

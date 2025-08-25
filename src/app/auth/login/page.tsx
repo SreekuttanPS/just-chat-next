@@ -1,11 +1,10 @@
 "use client";
 
 import Spinner from "@/components/Spinner";
-import chatStore from "@/zustand/chatStore";
 import { userStore } from "@/zustand/userStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 type ErrorState = {
@@ -26,6 +25,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const addUser = userStore((state) => state.addUser);
+  const currentUser = userStore((state) => state.currentUser);
 
   const userNameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -87,6 +87,12 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (currentUser?.username) {
+      router.replace("/chat");
+    }
+  }, [currentUser?.username, router]);
 
   return (
     <div className="flex flex-col gap-3 max-w-sm mx-auto">
