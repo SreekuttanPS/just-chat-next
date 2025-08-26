@@ -14,16 +14,16 @@ const ChatInput = () => {
   const router = useRouter();
   const { roomName } = useParams();
   const [input, setInput] = useState("");
-
   const currentUser = userStore((state) => state.currentUser);
   const replyTo = chatStore((state) => state.replyTo);
   const decodedRoomName = roomName
     ? decodeURIComponent(roomName as string)
     : "";
 
-  const socketRef = useRef(getSocket());
   const inputRef = useRef<HTMLInputElement>(null);
+  const socketRef = useRef(getSocket());
 
+  const updateCurrentRoom = chatStore((state) => state.updateCurrentRoom);
   const removeReplyMessage = chatStore((state) => state.removeReplyMessage);
 
   const handleSend = () => {
@@ -59,6 +59,10 @@ const ChatInput = () => {
 
     return () => clearTimeout(timeout);
   }, [currentUser?.username, router]);
+
+  useEffect(() => {
+    updateCurrentRoom(decodedRoomName);
+  }, [decodedRoomName, updateCurrentRoom]);
 
   return (
     <div>

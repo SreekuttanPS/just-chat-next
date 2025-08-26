@@ -1,7 +1,6 @@
 "use client";
 
 import { Fragment, useEffect, useMemo, useRef } from "react";
-import { useParams } from "next/navigation";
 
 import chatStore from "@/zustand/chatStore";
 
@@ -12,19 +11,15 @@ import DmSocketContainer from "./DmSocketContainer";
 const ChatWindow = () => {
   const messages = chatStore((state) => state.messages);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const currentRoom = chatStore((state) => state.currentRoom);
 
-  const { roomName } = useParams();
-
-  const decodedRoomName = roomName
-    ? decodeURIComponent((roomName || "") as string)
-    : "";
 
   const currentMessages = useMemo(() => {
-    if (decodedRoomName) {
-      return messages?.private?.[decodedRoomName];
+    if (currentRoom) {
+      return messages?.private?.[currentRoom];
     }
     return messages?.mainThread;
-  }, [messages, decodedRoomName]);
+  }, [messages, currentRoom]);
 
   useEffect(() => {
     bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -73,8 +68,8 @@ const ChatWindow = () => {
         )
       )}
       <div ref={bottomRef}></div>
-      {decodedRoomName ? (
-        <DmSocketContainer decodedRoomName={decodedRoomName} />
+      {currentRoom ? (
+        <DmSocketContainer currentRoom={currentRoom} />
       ) : null}
     </div>
   );

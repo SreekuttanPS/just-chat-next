@@ -20,6 +20,7 @@ type ChatState = {
     mainThread: boolean;
     private: Record<string, boolean>;
   };
+  currentRoom: string | null;
 };
 
 type Actions = {
@@ -36,6 +37,7 @@ type Actions = {
   updateOnlineUsers: (users: UserListItem[]) => void;
   createDirectMessage: (_roomName: string) => void;
   updateNotifications: (type: "add" | "remove", _roomName?: string) => void;
+  updateCurrentRoom: (_roomName?: string) => void;
 };
 
 const initialState: ChatState = {
@@ -46,6 +48,7 @@ const initialState: ChatState = {
     mainThread: false,
     private: {},
   },
+  currentRoom: null,
 };
 
 export const chatStore = create<ChatState & Actions>()(
@@ -199,6 +202,11 @@ export const chatStore = create<ChatState & Actions>()(
             },
           };
         }),
+      updateCurrentRoom: (currentRoom) =>
+        set((state) => ({
+          ...state,
+          currentRoom: currentRoom || null,
+        })),
     }),
     {
       name: "just-chat-store", // name of the item in the storage.

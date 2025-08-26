@@ -69,8 +69,14 @@ function SocketBridge() {
       }
     }
 
-    function onRecievingNotification(response: { message: string }) {
-      toast(response?.message);
+    function onRecievingNotification(response: {
+      message: string;
+      roomName: string;
+    }) {
+      const currentRoom = chatStore.getState().currentRoom;
+      if (currentRoom !== response?.roomName) {
+        toast(response?.message);
+      }
     }
 
     socket.on("user_joined", onRecievingMessages);
