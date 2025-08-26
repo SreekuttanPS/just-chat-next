@@ -52,7 +52,7 @@ const UserPanel = () => {
         onClick={onLogout}
       >
         Logout{" "}
-        <Image src={logoutImage} className="w-5 h-5 dark:invert" alt="Logout" />{" "}
+        <Image src={logoutImage} className="w-5 h-5 dark:invert" alt="" />{" "}
       </button>
     </div>
   );

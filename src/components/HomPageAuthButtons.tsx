@@ -39,14 +39,14 @@ function HomPageAuthButtons() {
       {isLoading ? <LoaderComponent /> : null}
       <button
         onClick={() => onButtonClick("login")}
-        className="px-5 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition"
+        className="px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition"
         type="button"
       >
         Login
       </button>
       <button
         onClick={() => onButtonClick("signup")}
-        className="px-5 py-2 bg-green-500 hover:bg-green-600 rounded-lg font-medium transition"
+        className="px-5 py-2 bg-green-700 hover:bg-green-800 rounded-lg font-medium transition"
         type="button"
       >
         Signup
