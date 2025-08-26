@@ -1,9 +1,9 @@
-import Link from "next/link";
 import Image from "next/image";
 
 import gitHub from "@/assets/github.svg";
 import linkedIn from "@/assets/linkedin.svg";
 import instagram from "@/assets/instagram.svg";
+import HomPageAuthButtons from "@/components/HomPageAuthButtons";
 
 export default function Home() {
   return (
@@ -46,20 +46,7 @@ export default function Home() {
         let&apos;s make it happen.
       </p>
       {/* Buttons */}
-      <div className="flex gap-4 mb-8">
-        <Link
-          href="/auth/login"
-          className="px-5 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition"
-        >
-          Login
-        </Link>
-        <Link
-          href="/auth/signup"
-          className="px-5 py-2 bg-green-500 hover:bg-green-600 rounded-lg font-medium transition"
-        >
-          Signup
-        </Link>
-      </div>
+      <HomPageAuthButtons />
       {/* Social Links */}
       Check my socials here.
       <div className="flex gap-6 text-2xl mt-2">

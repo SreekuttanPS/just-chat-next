@@ -7,10 +7,7 @@ import { userStore } from "@/zustand/userStore";
 
 import LoaderComponent from "@/components/LoaderComponent";
 
-type UserResponse = {
-  username: string;
-  name: string;
-};
+import { UserResponse } from "@/types/commonTypes";
 
 function GetUser() {
   const router = useRouter();
@@ -22,7 +19,6 @@ function GetUser() {
       try {
         setIsLoading(true);
         const res = await fetch("/api/user");
-        console.log("res: ", res);
 
         if (res.ok) {
           const user: UserResponse = await res.json();

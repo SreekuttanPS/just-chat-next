@@ -49,7 +49,6 @@ function SocketBridge() {
       roomName: string;
       showMessage: boolean;
     }) {
-      console.log("onDmStart: ", response);
       if (response?.showMessage) {
         toast.success(`${response?.reciever} is in the DM`);
       }

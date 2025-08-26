@@ -24,3 +24,8 @@ export type UserListItem = {
   username: string;
   name: string;
 };
+
+export type UserResponse = {
+  username: string;
+  name: string;
+};

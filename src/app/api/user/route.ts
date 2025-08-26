@@ -8,7 +8,6 @@ export async function GET() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    console.log('cookieStore: ', cookieStore);
     if (!token) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }

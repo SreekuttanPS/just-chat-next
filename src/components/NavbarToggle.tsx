@@ -14,7 +14,6 @@ function NavbarToggle() {
   const toggleNavbar = navbarStore((state) => state?.toggleNavbar);
 
   const onToggle = () => {
-    console.log("clicked");
     toggleNavbar();
   };
 

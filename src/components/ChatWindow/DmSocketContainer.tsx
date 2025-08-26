@@ -12,8 +12,6 @@ function DmSocketContainer({ decodedRoomName }: { decodedRoomName: string }) {
     const socket = socketRef?.current;
     const [user1, user2] = parseDmRoomName(decodedRoomName);
     const reciever = currentUser?.username !== user1 ? user1 : user2;
-    console.log("currentUser?.username: ", currentUser?.username);
-    console.log("decodedRoomName: ", decodedRoomName);
     if (currentUser?.username && decodedRoomName) {
       socket.emit("start_dm", { sender: currentUser?.username, reciever });
     }
