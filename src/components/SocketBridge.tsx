@@ -1,11 +1,12 @@
 "use client";
+import { useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 import { getSocket } from "@/lib/socket";
 import { SocketMessage, UserListItem } from "@/types/commonTypes";
+
 import chatStore from "@/zustand/chatStore";
 import { userStore } from "@/zustand/userStore";
-import { useEffect, useRef } from "react";
-import toast from "react-hot-toast";
 
 function SocketBridge() {
   const socketRef = useRef(getSocket());
@@ -68,12 +69,17 @@ function SocketBridge() {
       }
     }
 
+    function onRecievingNotification(response: { message: string }) {
+      toast(response?.message);
+    }
+
     socket.on("user_joined", onRecievingMessages);
     socket.on("user_left", onRecievingMessages);
     socket.on("chat_message", onRecievingMessages);
     socket.on("get_all_users", handleUsers);
     socket.on("dm_started", onDmStart);
     socket.on("dm_message", onRecievingDm);
+    socket.on("notification", onRecievingNotification);
 
     return () => {
       socket.off("get_all_users", handleUsers);
@@ -82,6 +88,7 @@ function SocketBridge() {
       socket.off("user_joined", onRecievingMessages);
       socket.off("dm_started", onDmStart);
       socket.off("dm_message", onRecievingDm);
+      socket.off("notification", onRecievingNotification);
     };
   }, [
     createDirectMessage,

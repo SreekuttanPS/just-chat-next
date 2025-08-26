@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 import { SocketMessage, StoreMessage, UserListItem } from "@/types/commonTypes";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -14,25 +16,42 @@ type ChatState = {
     username: string;
     name: string;
   } | null;
+  notifications: {
+    mainThread: boolean;
+    private: Record<string, boolean>;
+  };
 };
 
 type Actions = {
   updateMainThread: (_data: SocketMessage, username: string) => void;
-  updateDirectMessage: (_data: SocketMessage, _roomName: string, username: string) => void;
+  updateDirectMessage: (
+    _data: SocketMessage,
+    _roomName: string,
+    username: string
+  ) => void;
   clearMessages: (dmId?: string) => void;
   resetChatState: () => void;
   addReplyMessage: (messageId: string, chatType?: string) => void;
   removeReplyMessage: () => void;
   updateOnlineUsers: (users: UserListItem[]) => void;
   createDirectMessage: (_roomName: string) => void;
+  updateNotifications: (type: "add" | "remove", _roomName?: string) => void;
+};
+
+const initialState: ChatState = {
+  messages: {} as ChatState["messages"],
+  allOnlineUsers: [],
+  replyTo: null,
+  notifications: {
+    mainThread: false,
+    private: {},
+  },
 };
 
 export const chatStore = create<ChatState & Actions>()(
   persist(
     (set) => ({
-      messages: {} as ChatState["messages"],
-      allOnlineUsers: [],
-      replyTo: null,
+      ...initialState,
       updateMainThread: (data, currentUsername) =>
         set((state) => {
           let transferType: "recieved" | "sent" = "recieved";
@@ -151,6 +170,34 @@ export const chatStore = create<ChatState & Actions>()(
             };
           }
           return state;
+        }),
+      updateNotifications: (type, roomName) =>
+        set((state) => {
+          if (roomName) {
+            if (type === "add") {
+              toast("Hello World");
+            }
+            return {
+              ...state,
+              notifications: {
+                ...state.notifications,
+                private: {
+                  ...state.notifications.private,
+                  [roomName]: type === "add" ? true : false,
+                },
+              },
+            };
+          }
+          if (type === "add") {
+            toast("New message in the main thread");
+          }
+          return {
+            ...state,
+            notifications: {
+              ...state.notifications,
+              mainThread: type === "add" ? true : false,
+            },
+          };
         }),
     }),
     {
